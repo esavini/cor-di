@@ -31,4 +31,4 @@ jobs:
       run: dotnet pack --no-build --configuration Release ./CoRDependencyInjection/CoRDependencyInjection.csproj --output .
       
     - name: Publish Nuget to GitHub registry
-      run: dotnet nuget push ./CoRDependencyInjection/out/*.nupkg --api-key ${{ secrets.PUBLISH_TO_NUGET_ORG }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push *.nupkg --api-key ${{ secrets.PUBLISH_TO_NUGET_ORG }} -s https://api.nuget.org/v3/index.json --skip-duplicate
