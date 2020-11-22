@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoRDependencyInjection", "CoRDependencyInjection\CoRDependencyInjection.csproj", "{E9A3D648-EC3F-4910-A637-5C0606E595E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoRDependencyInjection.Tests", "CoRDependencyInjection.Tests\CoRDependencyInjection.Tests.csproj", "{1708B7AA-C2A6-435E-A819-F95CE857BB98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E9A3D648-EC3F-4910-A637-5C0606E595E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9A3D648-EC3F-4910-A637-5C0606E595E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9A3D648-EC3F-4910-A637-5C0606E595E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
