@@ -1,7 +1,14 @@
 ﻿# Chain of Responsibility Dependency Injection
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/esavini/cor-di/.NET%20Core/main)
+![Nuget](https://img.shields.io/nuget/dt/CoRDependencyInjection)
+
+This library allows you to use constructor dependency injection (and perform Inversion of Control) with the Chain of Responsibility pattern (see [Wikipedia page](https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern) or read [GoF book's _Design Patterns_](https://en.wikipedia.org/wiki/Design_Patterns)).
+It is entirely written in C# and targets .NET Standard 2.1 (so, it is compatible with .NET Core 3.1 and .NET 5.0 but not with .NET Framework).
 
 ## Installation
-ToDo
+Simply use this nuget command:
+
+```Install-Package CoRDependencyInjection```
 
 ## Usage
 Basic usage (and the only one 😉):
