@@ -1,5 +1,4 @@
-﻿using System;
-using CoRDependencyInjection.Exceptions;
+﻿using CoRDependencyInjection.Exceptions;
 using CoRDependencyInjection.Tests.TestItems;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -16,9 +15,10 @@ namespace CoRDependencyInjection.Tests.Unit
         public ChainOfResponsibilityBuilderTests()
         {
             _serviceCollectionMock = new Mock<IServiceCollection>();
-            _builder = new ChainOfResponsibilityBuilder<ITestChain>(_serviceCollectionMock.Object);
+            _builder = new ChainOfResponsibilityBuilder<ITestChain>(_serviceCollectionMock.Object,
+                ServiceLifetime.Transient);
         }
-        
+
         [Fact]
         public void WithHandler_Success_NoCondition()
         {
@@ -38,22 +38,30 @@ namespace CoRDependencyInjection.Tests.Unit
             _serviceCollectionMock.VerifyNoOtherCalls();
         }
 
-        [Fact]
-        public void BuildChain_Success_NoCondition()
+        [Theory]
+        [InlineData(ServiceLifetime.Transient)]
+        [InlineData(ServiceLifetime.Scoped)]
+        [InlineData(ServiceLifetime.Singleton)]
+        public void BuildChain_Success_NoCondition(ServiceLifetime serviceLifetime)
         {
-            _serviceCollectionMock.Setup(_ => _.Add(It.Is<ServiceDescriptor>(descriptor =>
-                descriptor.Lifetime == ServiceLifetime.Transient &&
+            var builder = new ChainOfResponsibilityBuilder<ITestChain>(_serviceCollectionMock.Object, serviceLifetime);
+
+            _serviceCollectionMock.Setup(exp => exp.Add(It.Is<ServiceDescriptor>(descriptor =>
+                    descriptor.Lifetime == serviceLifetime &&
+                    descriptor.ServiceType == typeof(ITestChain) &&
+                    descriptor.ImplementationFactory != null
+                )));
+
+            var builtChain = builder.WithHandler<EmptyConstructorHandler>()
+                .BuildChain();
+            Assert.IsAssignableFrom<IServiceCollection>(builtChain);
+
+            _serviceCollectionMock.Verify(exp => exp.Add(It.Is<ServiceDescriptor>(descriptor =>
+                descriptor.Lifetime == serviceLifetime &&
                 descriptor.ServiceType == typeof(ITestChain) &&
-                descriptor.ImplementationFactory.GetType() == typeof(Func<IServiceProvider, ITestChain>)
-            )));
-            
-            Assert.IsAssignableFrom<IServiceCollection>(_builder.WithHandler<EmptyConstructorHandler>().BuildChain());
-            
-            _serviceCollectionMock.Verify(_ => _.Add(It.Is<ServiceDescriptor>(descriptor =>
-                descriptor.Lifetime == ServiceLifetime.Transient &&
-                descriptor.ServiceType == typeof(ITestChain) &&
-                descriptor.ImplementationFactory.GetType() == typeof(Func<IServiceProvider, ITestChain>)
-            )), Times.Once);
+                descriptor.ImplementationFactory != null)
+            ), Times.Once);
+
             _serviceCollectionMock.VerifyNoOtherCalls();
         }
     }

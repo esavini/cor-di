@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using CoRDependencyInjection.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +17,14 @@ namespace CoRDependencyInjection
     {
         private readonly IServiceCollection _services;
 
-        private IList<Type> _handlers;
+        private readonly ServiceLifetime _serviceLifetime;
 
-        internal ChainOfResponsibilityBuilder(IServiceCollection services)
+        private readonly List<Type> _handlers;
+
+        internal ChainOfResponsibilityBuilder(IServiceCollection services, ServiceLifetime serviceLifetime)
         {
             _services = services;
+            _serviceLifetime = serviceLifetime;
             _handlers = new List<Type>();
         }
 
@@ -46,12 +48,12 @@ namespace CoRDependencyInjection
         /// <exception cref="RequestedNextHandlerInTheLastOneException">When the last handler requests the next one.</exception>
         public IServiceCollection BuildChain()
         {
-            if (_handlers.Count == 0)
-            {
-                throw new EmptyChainException();
-            }
+            if (!_handlers.Any()) throw new EmptyChainException();
 
-            _services.AddTransient(serviceProvider => InstantiateRecursively(serviceProvider));
+            var serviceDescriptor = new ServiceDescriptor(typeof(TChain),
+                serviceProvider => InstantiateRecursively(serviceProvider), _serviceLifetime);
+
+            _services.Add(serviceDescriptor);
             return _services;
         }
 
@@ -65,8 +67,10 @@ namespace CoRDependencyInjection
         /// <exception cref="RequestedNextHandlerInTheLastOneException">When the last handler requests the next one.</exception>
         private TChain InstantiateRecursively(IServiceProvider services, int current = 0)
         {
-            var constructor = _handlers[current].GetConstructors().Where(_ => _.IsPublic)
-                .OrderByDescending(_ => _.GetParameters().Length).FirstOrDefault();
+            var constructor = _handlers[current].GetConstructors()
+                .Where(c => c.IsPublic)
+                .OrderByDescending(c => c.GetParameters().Length)
+                .FirstOrDefault();
 
             if (constructor is null)
             {
@@ -75,9 +79,9 @@ namespace CoRDependencyInjection
 
             var constructorParameters = constructor.GetParameters();
 
-            IList<object> parametersInstances = new List<object>();
+            var parametersInstances = new List<object>();
 
-            foreach (ParameterInfo parameter in constructorParameters)
+            foreach (var parameter in constructorParameters)
             {
                 var type = parameter.ParameterType;
 
@@ -96,7 +100,7 @@ namespace CoRDependencyInjection
                 }
             }
 
-            return (TChain) Activator.CreateInstance(_handlers[current], parametersInstances.ToArray());
+            return (TChain)Activator.CreateInstance(_handlers[current], parametersInstances.ToArray());
         }
     }
 }

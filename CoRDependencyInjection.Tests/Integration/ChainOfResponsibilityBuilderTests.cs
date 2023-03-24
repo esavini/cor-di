@@ -15,13 +15,14 @@ namespace CoRDependencyInjection.Tests.Integration
         public ChainOfResponsibilityBuilderTests()
         {
             _services = new ServiceCollection();
-            _builder = new ChainOfResponsibilityBuilder<ITestChain>(_services);
+            _builder = new ChainOfResponsibilityBuilder<ITestChain>(_services, ServiceLifetime.Transient);
         }
 
         [Fact]
         public void BuildChain_Success_WhenNoConstructorIsProvided()
         {
-            _builder.WithHandler<EmptyConstructorHandler>().BuildChain();
+            _builder.WithHandler<EmptyConstructorHandler>()
+                .BuildChain();
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
 
             serviceProvider.GetService<ITestChain>();
@@ -30,7 +31,8 @@ namespace CoRDependencyInjection.Tests.Integration
         [Fact]
         public void BuildChain_ThrowsRequestedNextHandlerInTheLastOneException_WhenIsRequestedNextHandlerInTheLastOne()
         {
-            _builder.WithHandler<OnlyNextHandlerConstructor>().BuildChain();
+            _builder.WithHandler<OnlyNextHandlerConstructor>()
+                .BuildChain();
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
 
             Assert.Throws<RequestedNextHandlerInTheLastOneException>(() => serviceProvider.GetService<ITestChain>());
@@ -39,7 +41,8 @@ namespace CoRDependencyInjection.Tests.Integration
         [Fact]
         public void BuildChain_ThrowsMissingPublicConstructorException_WhenAValidPublicConstructorIsNotAvailable()
         {
-            _builder.WithHandler<PrivateInvalidConstructor>().BuildChain();
+            _builder.WithHandler<PrivateInvalidConstructor>()
+                .BuildChain();
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
 
             Assert.Throws<MissingPublicConstructorException>(() => serviceProvider.GetService<ITestChain>());
@@ -48,12 +51,15 @@ namespace CoRDependencyInjection.Tests.Integration
         [Fact]
         public void BuildChain_Success_NoCondition()
         {
-            var singleton = new TestSingleton();
-            singleton.Guid = Guid.NewGuid().ToString();
+            var singleton = new TestSingleton
+            {
+                Guid = Guid.NewGuid().ToString()
+            };
 
             _builder.WithHandler<FirstHandler>()
                 .WithHandler<SecondHandler>()
-                .WithHandler<EmptyConstructorHandler>().BuildChain()
+                .WithHandler<EmptyConstructorHandler>()
+                .BuildChain()
                 .AddSingleton(singleton);
 
             IServiceProvider serviceProvider = _services.BuildServiceProvider();
