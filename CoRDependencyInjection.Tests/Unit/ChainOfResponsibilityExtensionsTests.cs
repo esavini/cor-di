@@ -1,4 +1,5 @@
-﻿using CoRDependencyInjection.Extensions;
+﻿using System;
+using CoRDependencyInjection.Extensions;
 using CoRDependencyInjection.Tests.TestItems;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -7,7 +8,7 @@ namespace CoRDependencyInjection.Tests.Unit
 {
     public class ChainOfResponsibilityExtensionsTests
     {
-        [Fact]
+        [Fact, Obsolete]
         public void AddChain_Success_NoCondition()
         {
             IServiceCollection serviceCollection = new ServiceCollection();

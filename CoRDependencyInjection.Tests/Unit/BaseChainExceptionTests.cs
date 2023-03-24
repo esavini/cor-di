@@ -17,7 +17,7 @@ namespace CoRDependencyInjection.Tests.Unit
         [Fact]
         public void StringConstructor_NoCondition_Success()
         {
-            var exception = (TException) Activator.CreateInstance(typeof(TException), "");
+            var exception = (TException) Activator.CreateInstance(typeof(TException), "")!;
 
             Assert.Empty(exception!.Message);
         }
@@ -25,7 +25,7 @@ namespace CoRDependencyInjection.Tests.Unit
         [Fact]
         public void StringAndInnerExceptionConstructor_NoCondition_Success()
         {
-            var exception = (TException) Activator.CreateInstance(typeof(TException), "", new ArgumentException());
+            var exception = (TException) Activator.CreateInstance(typeof(TException), "", new ArgumentException())!;
 
             Assert.NotNull(exception!.Message);
             Assert.IsType<ArgumentException>(exception!.InnerException);

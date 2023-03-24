@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <PackageVersion>1.2.1</PackageVersion>
         <Title>Chain of Responsibility Dependency Injection</Title>
         <Authors>sav.edo</Authors>
@@ -14,7 +14,6 @@
         <PackageProjectUrl>https://github.com/esavini/cor-di</PackageProjectUrl>
         <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
-        <PackageLicenseUrl></PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>

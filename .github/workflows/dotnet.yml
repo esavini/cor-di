@@ -31,5 +31,6 @@ jobs:
       
     - name: Pack
       run: |
-        dotnet pack --configuration Release ./CoRDependencyInjection/CoRDependencyInjection.csproj --output .
+        dotnet build --configuration Release
+        dotnet pack --configuration Release --include-symbols --include-source Release ./CoRDependencyInjection/CoRDependencyInjection.csproj --output .
         dotnet nuget push *.nupkg --api-key ${{ secrets.PUBLISH_TO_NUGET_ORG }} -s https://api.nuget.org/v3/index.json --skip-duplicate
