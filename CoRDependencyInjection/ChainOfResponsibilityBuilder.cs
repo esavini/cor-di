@@ -96,7 +96,7 @@ namespace CoRDependencyInjection
                 }
                 else
                 {
-                    parametersInstances.Add(services.GetService(type));
+                    parametersInstances.Add(services.GetRequiredService(type));
                 }
             }
 
