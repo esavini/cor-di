@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>1.2.6</PackageVersion>
+        <PackageVersion>1.2.7</PackageVersion>
         <Title>Chain of Responsibility Dependency Injection</Title>
         <Authors>sav.edo</Authors>
         <Copyright>Copyright (c) 2026 Edoardo Savini</Copyright>

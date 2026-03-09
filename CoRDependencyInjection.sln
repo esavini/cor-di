@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoRDependencyInjection", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoRDependencyInjection.Tests", "CoRDependencyInjection.Tests\CoRDependencyInjection.Tests.csproj", "{1708B7AA-C2A6-435E-A819-F95CE857BB98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoRDependencyInjection.Benchmarks", "CoRDependencyInjection.Benchmarks\CoRDependencyInjection.Benchmarks.csproj", "{599FCF9A-8AF2-4372-AC76-5B0CB24B64EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1708B7AA-C2A6-435E-A819-F95CE857BB98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{599FCF9A-8AF2-4372-AC76-5B0CB24B64EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{599FCF9A-8AF2-4372-AC76-5B0CB24B64EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{599FCF9A-8AF2-4372-AC76-5B0CB24B64EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{599FCF9A-8AF2-4372-AC76-5B0CB24B64EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

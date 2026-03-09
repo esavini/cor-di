@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -48,7 +48,7 @@ namespace CoRDependencyInjection
         /// <exception cref="RequestedNextHandlerInTheLastOneException">When the last handler requests the next one.</exception>
         public IServiceCollection BuildChain()
         {
-            if (!_handlers.Any()) throw new EmptyChainException();
+            if (_handlers.Count == 0) throw new EmptyChainException();
 
             var serviceDescriptor = new ServiceDescriptor(typeof(TChain),
                 serviceProvider => InstantiateRecursively(serviceProvider), _serviceLifetime);
@@ -67,40 +67,38 @@ namespace CoRDependencyInjection
         /// <exception cref="RequestedNextHandlerInTheLastOneException">When the last handler requests the next one.</exception>
         private TChain InstantiateRecursively(IServiceProvider services, int current = 0)
         {
-            var constructor = _handlers[current].GetConstructors()
+            var type = _handlers[current];
+            var constructor = type.GetConstructors()
                 .Where(c => c.IsPublic)
                 .OrderByDescending(c => c.GetParameters().Length)
                 .FirstOrDefault();
 
             if (constructor is null)
             {
-                throw new MissingPublicConstructorException(_handlers[current].FullName);
+                throw new MissingPublicConstructorException(type.FullName ?? "");
             }
 
             var constructorParameters = constructor.GetParameters();
 
-            var parametersInstances = new List<object>();
-
+            var requiresNext = false;
+            
             foreach (var parameter in constructorParameters)
             {
-                var type = parameter.ParameterType;
-
-                if (type == typeof(TChain))
+                if (parameter.ParameterType != typeof(TChain)) continue;
+                
+                if (current == _handlers.Count - 1)
                 {
-                    if (current == _handlers.Count - 1)
-                    {
-                        throw new RequestedNextHandlerInTheLastOneException();
-                    }
-
-                    parametersInstances.Add(InstantiateRecursively(services, current + 1));
+                    throw new RequestedNextHandlerInTheLastOneException(parameter.Name, type.Name);
                 }
-                else
-                {
-                    parametersInstances.Add(services.GetRequiredService(type));
-                }
+                
+                requiresNext = true;
             }
 
-            return (TChain)Activator.CreateInstance(_handlers[current], parametersInstances.ToArray());
+            var explicitArguments = requiresNext
+                ? new object[] { InstantiateRecursively(services, current + 1) }
+                : Array.Empty<object>();
+
+            return (TChain)ActivatorUtilities.CreateInstance(services, type, explicitArguments);
         }
     }
 }
